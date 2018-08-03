@@ -228,11 +228,16 @@ def plotTopicByMedia(dsname, news_df_topics, n_topics, topic_labels=None, fig_fo
 	xlabel = "$Topic\ Index$"
 	ylabel = "$Media$"
 	if (topic_labels!=None):
-		ax.set_xticklabels([ "$%s$" % val.replace(" ","\ ") for val in topic_labels ])
-		xlabel = "$Topic$"
-
+		if (len(topic_labels)>5):
+			rotation=90#'vertical'
+		else:
+			rotation=0
+		xlabel = "$ Topic $"
+		ax.set_xticklabels([ "$%s$" % val.replace(" ","\ ") for val in topic_labels ], rotation=rotation)
+		
 	plt.xlabel(xlabel)
 	plt.ylabel(ylabel)
+
 
 	if format!= None:
 		print("[INFO]: Plot Topic by Media '%smedia_%s.%s'" % (fig_folder, dsname, format))
@@ -310,7 +315,16 @@ def plotMediaTimeline(dsname, news_df_topics, n_topics, topic_labels=None, group
 		ax.set_yticklabels([ "$%s$" % val.replace(" ","\ ") for val in topic_labels ])
 		ylabel = "$Topic$"
 
-	plt.xticks(rotation=90)
+	if (topic_labels!=None):
+		if (len(topic_labels)>5):
+			rotation=0
+		else:
+			rotation='vertical'
+		#ax.set_xticklabels([ "$%s$" % val.replace(" ","\ ") for val in topic_labels ], rotation=rotation)
+		xlabel = "$Topic$"
+		plt.yticks(rotation=rotation)
+		plt.xticks(rotation=90)
+	#plt.xticks(rotation=90)
 	plt.xlabel(xlabel)
 	plt.ylabel(ylabel)
 
