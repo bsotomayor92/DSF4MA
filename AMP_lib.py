@@ -47,7 +47,7 @@ def tokenize_lemmatize_filtering(text):
     doc = nlp(text)
     for token in doc :
         if re.search('[a-zA-Z]', token.lemma_.lower()):
-            if (token.pos_ == 'NOUN' or token.pos_ == 'ADJ' or token.pos_ == 'VERB' ):
+            if (token.pos_ == 'NOUN'):# or token.pos_ == 'ADJ' or token.pos_ == 'VERB' ):
                 filtered_lemmas.append(token.lemma_.lower())
     return " ".join(filtered_lemmas)
 
@@ -204,7 +204,41 @@ def plotPerplexity(dsname, tf, max_topics, max_iter, learning_offset, random_sta
 		plt.savefig("%sperplexity_%s.%s" % (fig_folder, dsname, format))
 	else:
 		plt.show()
+def addMediaInfo(df_news, fn_medias):
+    raw_media_data = pd.read_csv(fn_medias, sep=',')
+    raw_media_data=raw_media_data.rename(columns = {'CódigoMedio':'media'})
+    
+    df_news['media'] = df_news['media'].astype(str)
+    raw_media_data['media'] = raw_media_data['media'].astype(str)
+    df_news['media'] = df_news['media'].apply(lambda m: m.replace(" ",""))
+    raw_media_data['media'] = raw_media_data['media'].apply(lambda m: m.replace(" ",""))
 
+    return pd.DataFrame.merge(df_news, raw_media_data, on='media')
+
+def plotMediaBy(df, xkey, ykey, xlabel=None, ylabel=None):
+	"""
+	Plotea dos variables categóricas selecciondas del dataframe df
+	"""
+	xkey_names = df[xkey].unique()
+	ykey_names = df[ykey].unique()
+	plt.clf()
+	d_tuples = {} #key:(xkey,ykey) val: freq
+	for ii, row in df.iterrows():
+		if not row[xkey] in d_tuples:
+			d_tuples[ row[xkey] ] = {}
+		if not row[ykey] in d_tuples[ row[xkey]]:
+			d_tuples[ row[xkey] ][ row[ykey] ] = 0
+		d_tuples[ row[xkey] ][ row[ykey] ] += 1
+    
+	pd_plot = (pd.DataFrame.from_dict(d_tuples)).fillna(0)
+	pd_plot = pd_plot.div(pd_plot.sum(axis=1), axis=0)
+	ax = sns.heatmap(pd_plot, annot=False, cmap="Greens", cbar=False, vmin=0, vmax=1)
+	cbar = ax.figure.colorbar(ax.collections[0])
+	cbar.set_ticks([.0, 0.25, 0.50, 0.75, 1.0])
+	cbar.set_ticklabels(["0%", "25%", "50%", "75%", "100%"])
+	plt.xlabel(xlabel)
+	plt.ylabel(ylabel)
+    
 def plotTopicByMedia(dsname, news_df_topics, n_topics, topic_labels=None, fig_folder="", format=None):
 	if(format!=None): plt.clf()
 	d_medios={}
