@@ -283,6 +283,7 @@ def plotTopicByMedia(dsname, news_df_topics, n_topics, topic_labels=None, fig_fo
 def plotMediaTimeline(dsname, news_df_topics, n_topics, topic_labels=None, groupby=None,fig_folder="", format=None):
 	# PLOT: linea de tiempo con presencia de tópicos
 	# data to plot
+	if topic_labels!=None: topic_labels = topic_labels[::-1]
 	temp = news_df_topics.copy()
 	xlabel = "$article\ index\ (ordered\ chronologically)$"
 	step = 0 # cantidad de dias/semanas/meses a agregar en index
@@ -355,7 +356,7 @@ def plotMediaTimeline(dsname, news_df_topics, n_topics, topic_labels=None, group
 		else:
 			rotation='vertical'
 		#ax.set_xticklabels([ "$%s$" % val.replace(" ","\ ") for val in topic_labels ], rotation=rotation)
-		xlabel = "$Topic$"
+		ylabel = "$Topic$"
 		plt.yticks(rotation=rotation)
 		plt.xticks(rotation=90)
 	#plt.xticks(rotation=90)
