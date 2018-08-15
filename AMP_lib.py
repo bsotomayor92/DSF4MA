@@ -215,7 +215,7 @@ def addMediaInfo(df_news, fn_medias):
 
     return pd.DataFrame.merge(df_news, raw_media_data, on='media')
 
-def plotMediaBy(df, xkey, ykey, xlabel=None, ylabel=None):
+def plotMediaBy(df, xkey, ykey, xlabel=None, ylabel=None, topic_labels=None):
 	"""
 	Plotea dos variables categóricas selecciondas del dataframe df
 	"""
@@ -236,6 +236,13 @@ def plotMediaBy(df, xkey, ykey, xlabel=None, ylabel=None):
 	cbar = ax.figure.colorbar(ax.collections[0])
 	cbar.set_ticks([.0, 0.25, 0.50, 0.75, 1.0])
 	cbar.set_ticklabels(["0%", "25%", "50%", "75%", "100%"])
+	if (topic_labels!=None):
+		if (len(topic_labels)>5):
+			rotation=90#'vertical'
+		else:
+			rotation=0
+		xlabel = "$ Topic $"
+		ax.set_xticklabels([ "$%s$" % val.replace(" ","\ ") for val in topic_labels ], rotation=rotation)
 	plt.xlabel(xlabel)
 	plt.ylabel(ylabel)
     
