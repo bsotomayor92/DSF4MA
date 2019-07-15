@@ -1,1 +1,1 @@
-# DSFMA - A data science based framework for media analysis
+# DSFMA - A LDA-based framework for topic modeling and analysis
